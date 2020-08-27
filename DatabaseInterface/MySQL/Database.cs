@@ -15,7 +15,6 @@ namespace DatabaseInterface.MySQL {
 			public string Field { get; set; }
 			public string Type { get; set; }
 			public string Null { get; set; }
-			public string Key { get; set; }
 		}
 
 		public override List<DatabaseInterface.Table> tables {

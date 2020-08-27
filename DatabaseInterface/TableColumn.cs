@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace DatabaseInterface {
@@ -21,13 +22,16 @@ namespace DatabaseInterface {
 				formatted = Convert.ToDouble(value).ToString();
 
 			} else if (value is string){
-				formatted = $"'{value}'";
+				formatted = $"'{((string)value).Replace("'", "\\'")}'";
 
 			} else if (value is char c) {
 				formatted = $"'{c}'";
 
 			} else if (value is DateTime dateTime) {
 				formatted = $"'{dateTime.ToString("yyyy-MM-dd HH:mm:ss.fff")}'";
+
+			} else if (value is List<string> list) {
+				formatted = $"'{string.Join(",", list.Select(v => v.Replace("'", "\\'")))}'";
 
 			} else {
 				throw new NotImplementedException($"There is no way implemented to save fields of type: {value.GetType().AssemblyQualifiedName}");

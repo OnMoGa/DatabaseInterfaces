@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace DatabaseInterface {
@@ -8,6 +9,8 @@ namespace DatabaseInterface {
 		public string username { get; set; }
 		public string password { get; set; }
 
+
+		public abstract ConnectionState connectionState { get; }
 
 		public abstract List<Database> databases { get; }
 

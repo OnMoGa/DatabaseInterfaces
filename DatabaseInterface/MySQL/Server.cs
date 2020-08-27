@@ -1,12 +1,15 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 
 namespace DatabaseInterface.MySQL {
 	public class Server : DatabaseInterface.Server {
 
 		public int port { get; set; }
+
+
 
 		public Server(string hostname, string username, string password, int port = 3306) : base(hostname, username, password) {
 			this.port = port;
@@ -17,7 +20,7 @@ namespace DatabaseInterface.MySQL {
 		}
 
 		public MySqlConnection connection;
-
+		public override ConnectionState connectionState => connection?.State ?? ConnectionState.Closed;
 
 		public override List<DatabaseInterface.Database> databases {
 			get {
@@ -60,7 +63,7 @@ namespace DatabaseInterface.MySQL {
 		}
 
 
-		public static Dictionary<Type, string> typeEquivalents = new Dictionary<Type, string>() {
+		public static Dictionary<Type, string> typeEquivalents { get; } = new Dictionary<Type, string>() {
 			{typeof(bool), "TINYINT(4)".ToLower()},
 			{typeof(byte), "TINYINT(8)".ToLower()},
 			{typeof(Enum), "TINYINT(8)".ToLower()},

@@ -27,5 +27,7 @@ namespace DatabaseInterface {
 
 	}
 
-	public class DBColumn : Attribute {}
+	public class DBColumn : Attribute {
+		public int size { get; set; }
+	}
 }

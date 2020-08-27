@@ -8,12 +8,11 @@ namespace DatabaseInterface.MySQL {
 			return DatabaseInterface.TableColumn.getFormatted(value); 
 		}
 		public new string getCreateFormat() {
+			
 			string formatted = $"`{columnName}` ";
 			string equivalent = Server.typeEquivalents[dataType] ?? base.getCreateFormat();
 
-
 			formatted += $"{equivalent} ";
-
 
 			if (!nullable) {
 				formatted += "NOT NULL";

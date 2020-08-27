@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,8 @@ namespace DatabaseInterface.SQLServer {
 		public bool integratedSecurity { get; set; } = false;
 
 		public SqlConnection connection;
+
+		public override ConnectionState connectionState => connection?.State ?? ConnectionState.Closed;
 
 		public override List<DatabaseInterface.Database> databases {
 			get {
