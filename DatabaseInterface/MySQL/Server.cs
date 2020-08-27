@@ -59,5 +59,22 @@ namespace DatabaseInterface.MySQL {
 			return new Database(this, name);
 		}
 
+
+		public static Dictionary<Type, string> typeEquivalents = new Dictionary<Type, string>() {
+			{typeof(bool), "TINYINT(4)".ToLower()},
+			{typeof(byte), "TINYINT(8)".ToLower()},
+			{typeof(Enum), "TINYINT(8)".ToLower()},
+			{typeof(Int16), "SMALLINT".ToLower()},
+			{typeof(Int32), "INT(11)".ToLower()},
+			{typeof(Int64), "BIGINT".ToLower()},
+			{typeof(float), "FLOAT".ToLower()},
+			{typeof(decimal), "FLOAT".ToLower()},
+			{typeof(double), "DOUBLE".ToLower()},
+			{typeof(char), "CHAR(1)".ToLower()},
+			{typeof(string), "LONGTEXT".ToLower()},
+			{typeof(DateTime), "DATETIME".ToLower()},
+			{typeof(byte[]), "LONGBLOB".ToLower()},
+		};
+
 	}
 }

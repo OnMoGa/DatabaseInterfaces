@@ -26,5 +26,6 @@ namespace DatabaseInterface {
 		public abstract void close();
 		public abstract Database createDB(string name);
 
+
 	}
 }

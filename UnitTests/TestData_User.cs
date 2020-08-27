@@ -4,7 +4,7 @@ using System.Text;
 using DatabaseInterface;
 
 namespace UnitTests {
-	class TestData_Users : Entity<TestData_Users> {
+	class TestData_User : Entity<TestData_User> {
 		public override string tableName {
 			get => "users";
 		}

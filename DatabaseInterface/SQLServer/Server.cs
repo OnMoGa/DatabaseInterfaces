@@ -54,14 +54,37 @@ namespace DatabaseInterface.SQLServer {
 		}
 
 		public override void close() {
-			connection.Close();
+			//connection.Close();
 		}
 
 		public override DatabaseInterface.Database createDB(string name) {
-			string sql = $"CREATE DATABASE {name}";
+			if(connection == null) connect();
+			string sql = $@"IF NOT EXISTS (
+						        SELECT *
+						        FROM sys.databases
+						        WHERE name = '{name}'
+					        )
+						CREATE DATABASE {name}";
 			int result = connection.Execute(sql);
 			return new Database(this, name);
 		}
+
+
+		public static Dictionary<Type, string> typeEquivalents = new Dictionary<Type, string>() {
+			{typeof(bool), "BIT".ToLower()},
+			{typeof(byte), "TINYINT".ToLower()},
+			{typeof(Enum), "TINYINT".ToLower()},
+			{typeof(Int16), "SMALLINT".ToLower()},
+			{typeof(Int32), "INT".ToLower()},
+			{typeof(Int64), "BIGINT".ToLower()},
+			{typeof(double), "FLOAT".ToLower()},
+			{typeof(char), "CHAR".ToLower()},
+			{typeof(string), "NTEXT".ToLower()},
+			{typeof(DateTime), "DATETIME2".ToLower()},
+			{typeof(TimeSpan), "TIME".ToLower()},
+			{typeof(byte[]), "VARBINARY(MAX)".ToLower()},
+			{typeof(Guid), "UNIQUEIDENTIFIER".ToLower()},
+		};
 
 		
 	}

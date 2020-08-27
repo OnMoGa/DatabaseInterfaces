@@ -22,7 +22,7 @@ namespace DatabaseInterface.SQLServer {
 				//New row
 				string keys = String.Join(", ", row.Keys.ToArray());
 				string values = String.Join(", ", row.Values.ToArray());
-				string query = $"insert into {name} ({keys}) OUTPUT INSERTED.[Id] values ({values})";
+				string query = $"insert into [{database.name}].[dbo].[{name}] ({keys}) OUTPUT INSERTED.[Id] values ({values})";
 				id = ((Server)database.server).connection.QuerySingle<int>(query);
 
 			} else {
@@ -44,7 +44,5 @@ namespace DatabaseInterface.SQLServer {
 		public override string formatColumnValue(object value) {
 			return TableColumn.getFormatted(value);
 		}
-
-
 	}
 }

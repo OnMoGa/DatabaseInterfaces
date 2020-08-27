@@ -21,26 +21,8 @@ namespace DatabaseInterface {
 		}
 
 
-		public T saveToDB(Table table) {
-			Dictionary<string, string> row = new Dictionary<string, string>();
-
-			foreach (PropertyInfo property in typeof(T).GetProperties()) {
-
-				object value = property.GetValue(this);
-				//If the field has the DBColumn attribute then...
-				if (Attribute.IsDefined(property, typeof(DBColumn))) {
-					if(value == null) continue;
-					row[property.Name] = table.formatColumnValue(value);
-				}
-			}
-
-			if(row.Count > 0) {
-				id = table.saveEntity<T>(id, row);
-			} else {
-				throw new Exception($"{typeof(T).AssemblyQualifiedName} has no DBColumn fields");
-			}
-
-			return (T)this;
+		public T saveToDB<ENTITYTYPE>(Database db) where ENTITYTYPE : Entity<T>, new() {
+			return db.saveEntity<T>((T)this);
 		}
 
 	}

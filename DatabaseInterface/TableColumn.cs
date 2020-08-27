@@ -23,6 +23,9 @@ namespace DatabaseInterface {
 			} else if (value is string){
 				formatted = $"'{value}'";
 
+			} else if (value is char c) {
+				formatted = $"'{c}'";
+
 			} else if (value is DateTime dateTime) {
 				formatted = $"'{dateTime.ToString("yyyy-MM-dd HH:mm:ss.fff")}'";
 

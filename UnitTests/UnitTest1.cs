@@ -31,10 +31,11 @@ namespace UnitTests {
 			getDatabases(server, db);
 
 			Table table = createTable(db, tableName);
+			getTables(db, table);
 
-
+			saveEntity(db);
+			
 			//cleanup
-			table.delete();
 			deleteDatabase(db);
 		}
 
@@ -59,18 +60,53 @@ namespace UnitTests {
 		}
 
 		public Table createTable(Database db, string name) {
-			Table table = db.createTable(name, new List<TableColumn> {
-				new TableColumn(){ columnName = "name", dataType = typeof(string) },
-				new TableColumn(){ columnName = "address", dataType = typeof(string) },
-				new TableColumn(){ columnName = "lastLogin", dataType = typeof(DateTime) },
-				new TableColumn(){ columnName = "bankBalance", dataType = typeof(double) },
-				new TableColumn(){ columnName = "sex", dataType = typeof(char) },
-				new TableColumn(){ columnName = "loginCount", dataType = typeof(int) }
-			});
+			Table table = db.createTable<TestData_User>();
+
 			Assert.Equal(name, table.name);
 			return table;
 		}
 
+		public void getTables(Database db, Table expectedTable) {
+			List<Table> tables = db.tables;
+			Assert.Contains(tables, t => t.name == expectedTable.name);
+		}
+
+		public void saveEntity(Database db) {
+			TestData_User user = (new TestData_User() {
+				name = "Michael Hamilton",
+				address = "180 Commercial Rd",
+				lastLogin = DateTime.Now,
+				bankBalance = 0.01,
+				sex = 'M',
+				loginCount = 5
+			}).saveToDB<TestData_User>(db);
+
+			TestData_User user2 = (new TestData_User() {
+				name = "Chloe Hernandez",
+				address = "180 Commercial Rd",
+				lastLogin = DateTime.Now,
+				bankBalance = 0.01,
+				sex = 'F',
+				loginCount = 3
+			}).saveToDB<TestData_User>(db);
+
+
+			Assert.NotEqual(0, user.id);
+
+			TestData_User theSameUser = db.getEntityById<TestData_User>(user.id);
+			Assert.Equal(user.name, theSameUser.name);
+
+		}
+
+		public void getEntities(Database db) {
+			List<TestData_User> users = db.getEntities<TestData_User>();
+			Assert.True(users.Count > 0);
+		}
+
+
+		public void deleteTable(Table table) {
+			table.delete();
+		}
 
 
 	}

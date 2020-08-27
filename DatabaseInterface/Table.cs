@@ -7,7 +7,7 @@ namespace DatabaseInterface {
 		public Database database { get; }
 		public string name { get; }
 		public List<DatabaseInterface.TableColumn> columns { get; set; }
-		public Dictionary<string, List<object>> data { get; }
+
 
 		public Table(Database database, string name, List<DatabaseInterface.TableColumn> columns) {
 			this.database = database;
