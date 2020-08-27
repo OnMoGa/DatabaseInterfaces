@@ -18,7 +18,7 @@ namespace UnitTests {
 
 		[Fact]
 		public void MyRunTests() {
-			DatabaseInterface.Server server = new MySQLServer("hostname","username", "password");
+			DatabaseInterface.Server server = new DatabaseInterface.MySQL.Server("hostname","username", "password");
 			runTests(server);
 		}
 
