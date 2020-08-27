@@ -4,29 +4,29 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace DatabaseInterface.MySQL {
-	public class MySQLServer : Server {
+	public class Server : DatabaseInterface.Server {
 
 		public int port { get; set; }
 
-		public MySQLServer(string hostname, string username, string password, int port = 3306) : base(hostname, username, password) {
+		public Server(string hostname, string username, string password, int port = 3306) : base(hostname, username, password) {
 			this.port = port;
 		}
 
-		~MySQLServer() {
+		~Server() {
 			close();
 		}
 
-		private MySqlConnection connection;
+		public MySqlConnection connection;
 
 
-		public override List<Database> databases {
+		public override List<DatabaseInterface.Database> databases {
 			get {
 				string sql = "SHOW DATABASES;";
 				MySqlCommand command = new MySqlCommand(sql, connection);
 				MySqlDataReader reader = command.ExecuteReader();
-				List<Database> dbs = new List<Database>();
+				List<DatabaseInterface.Database> dbs = new List<DatabaseInterface.Database>();
 				while(reader.Read()) {
-					dbs.Add(new MySQLDB(this, reader.GetString(reader.GetName(0))));
+					dbs.Add(new Database(this, reader.GetString(reader.GetName(0))));
 				}
 				reader.Close();
 				return dbs;
@@ -52,18 +52,12 @@ namespace DatabaseInterface.MySQL {
 		}
 
 
-		public override Database createDB(string name) {
+		public override DatabaseInterface.Database createDB(string name) {
 			string sql = $"CREATE DATABASE IF NOT EXISTS {name}";
 			MySqlCommand command = new MySqlCommand(sql, connection);
 			int result = command.ExecuteNonQuery();
-			return new MySQLDB(this, name);
+			return new Database(this, name);
 		}
 
-		public override bool deleteDB(Database database) {
-			string sql = $"DROP DATABASE {database.name}";
-			MySqlCommand command = new MySqlCommand(sql, connection);
-			int result = command.ExecuteNonQuery();
-			return true;
-		}
 	}
 }

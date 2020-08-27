@@ -25,8 +25,6 @@ namespace DatabaseInterface {
 		public abstract void connect();
 		public abstract void close();
 		public abstract Database createDB(string name);
-		public abstract bool deleteDB(Database database);
-
 
 	}
 }

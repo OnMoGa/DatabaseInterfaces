@@ -13,10 +13,11 @@ namespace DatabaseInterface {
 			this.server = server;
 			this.name = name;
 		}
+		public abstract void delete();
+		public abstract Table createTable(string name, List<TableColumn> columns);
+		public abstract T getEntityById<T>(int id);
+		public abstract List<T> getEntities<T>(int? top);
 
-		public abstract String generateConnectionString();
-		public abstract bool testConnection();
-		public abstract bool connect();
 
 	}
 

@@ -7,30 +7,30 @@ using Dapper;
 using DatabaseInterface.MySQL;
 
 namespace DatabaseInterface.SQLServer {
-	public class MSSQLServer : Server {
+	public class Server : DatabaseInterface.Server {
 
 		public bool integratedSecurity { get; set; } = false;
 
-		private SqlConnection connection;
+		public SqlConnection connection;
 
-		public override List<Database> databases {
+		public override List<DatabaseInterface.Database> databases {
 			get {
 				string sql = $"SELECT * FROM sys.databases";
 				List<string> dbNames = connection.Query<string>(sql).ToList();
-				List<Database> dbs = new List<Database>(dbNames.Select(s => new MSSQLServerDB(this, s)));
+				List<DatabaseInterface.Database> dbs = new List<DatabaseInterface.Database>(dbNames.Select(s => new Database(this, s)));
 				return dbs;
 			}
 		}
 
 
-		public MSSQLServer(string hostname, bool integratedSecurity) {
+		public Server(string hostname, bool integratedSecurity) {
 			this.hostname = hostname;
 			this.integratedSecurity = integratedSecurity;
 		}
 
-		public MSSQLServer(string hostname, string username, string password) : base(hostname, username, password) { }
+		public Server(string hostname, string username, string password) : base(hostname, username, password) { }
 		
-		~MSSQLServer() {
+		~Server() {
 			close();
 		}
 
@@ -57,17 +57,12 @@ namespace DatabaseInterface.SQLServer {
 			connection.Close();
 		}
 
-
-		public override Database createDB(string name) {
+		public override DatabaseInterface.Database createDB(string name) {
 			string sql = $"CREATE DATABASE {name}";
 			int result = connection.Execute(sql);
-			return new MSSQLServerDB(this, name);
+			return new Database(this, name);
 		}
 
-		public override bool deleteDB(Database database) {
-			string sql = $"DROP DATABASE {database.name}";
-			int result = connection.Execute(sql);
-			return true;
-		}
+		
 	}
 }

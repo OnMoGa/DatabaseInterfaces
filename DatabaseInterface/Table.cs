@@ -4,7 +4,20 @@ using System.Text;
 
 namespace DatabaseInterface {
 	public abstract class Table {
-		public string name { get; set; }
-		public Dictionary<string, List<object>> data { get; set; }
+		public Database database { get; }
+		public string name { get; }
+		public List<DatabaseInterface.TableColumn> columns { get; set; }
+		public Dictionary<string, List<object>> data { get; }
+
+		public Table(Database database, string name, List<DatabaseInterface.TableColumn> columns) {
+			this.database = database;
+			this.name = name;
+			this.columns = columns;
+		}
+
+
+		public abstract void delete();
+		public abstract int saveEntity<T>(int id, Dictionary<string, string> row) where T : Entity<T>, new();
+		public abstract string formatColumnValue(object value);
 	}
 }

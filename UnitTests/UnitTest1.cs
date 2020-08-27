@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using DatabaseInterface;
@@ -8,42 +9,66 @@ using Xunit;
 namespace UnitTests {
 	public class UnitTest1 {
 
+
 		[Fact]
-		public void MSConnect() {
-			Server server = new MSSQLServer("localhost", true);
-			server.connect();
+		public void MSRunTests() {
+			DatabaseInterface.Server server = new DatabaseInterface.SQLServer.Server("localhost", true);
+			runTests(server);
 		}
 
 		[Fact]
-		public void MyConnect() {
-			Server server = new MySQLServer("hostname","username", "password");
-			server.connect();
+		public void MyRunTests() {
+			DatabaseInterface.Server server = new MySQLServer("hostname","username", "password");
+			runTests(server);
 		}
 
-		[Fact]
-		public void MSManageDBs() {
-			Server server = new MSSQLServer("localhost", true);
-			server.connect();
-			Database db = server.createDB("test");
-			Assert.Equal("test", db.name);
-
-			List<Database> dbs = server.databases;
-			Assert.Contains(dbs, db => db.name == "test");
-
-			Assert.True(server.deleteDB(db));
-		}
-
-		[Fact]
-		public void MyManageDBs() {
-			Server server = new MySQLServer("192.168.0.175","root", "Mickyabc123");
-			server.connect();
-			Database db = server.createDB("test");
-			Assert.Equal("test", db.name);
+		public void runTests(DatabaseInterface.Server server) {
+			connect(server);
+			string dbName = "testDB";
+			string tableName = "users";
 			
-			List<Database> dbs = server.databases;
-			Assert.Contains(dbs, db => db.name == "test");
+			Database db = createDatabase(server, dbName);
+			getDatabases(server, db);
 
-			Assert.True(server.deleteDB(db));
+			Table table = createTable(db, tableName);
+
+
+			//cleanup
+			table.delete();
+			deleteDatabase(db);
+		}
+
+
+		public void connect(DatabaseInterface.Server server) {
+			server.connect();
+		}
+
+		public Database createDatabase(DatabaseInterface.Server server, string name) {
+			Database db = server.createDB(name);
+			Assert.Equal(name, db.name);
+			return db;
+		}
+
+		public void getDatabases(DatabaseInterface.Server server, Database expectedDatabase) {
+			List<Database> dbs = server.databases;
+			Assert.Contains(dbs, db => db.name.ToLower() == expectedDatabase.name.ToLower());
+		}
+
+		public void deleteDatabase(Database database) {
+			database.delete();
+		}
+
+		public Table createTable(Database db, string name) {
+			Table table = db.createTable(name, new List<TableColumn> {
+				new TableColumn(){ columnName = "name", dataType = typeof(string) },
+				new TableColumn(){ columnName = "address", dataType = typeof(string) },
+				new TableColumn(){ columnName = "lastLogin", dataType = typeof(DateTime) },
+				new TableColumn(){ columnName = "bankBalance", dataType = typeof(double) },
+				new TableColumn(){ columnName = "sex", dataType = typeof(char) },
+				new TableColumn(){ columnName = "loginCount", dataType = typeof(int) }
+			});
+			Assert.Equal(name, table.name);
+			return table;
 		}
 
 
